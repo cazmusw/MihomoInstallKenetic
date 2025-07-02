@@ -1,0 +1,207 @@
+tproxy-port: 5000
+mixed-port: 1080
+allow-lan: true
+log-level: silent
+geodata-mode: true
+geo-auto-update: true
+geo-update-interval: 72
+mode: rule
+ipv6: false
+external-controller: 0.0.0.0:9090
+external-ui: zashboard
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+
+profile:
+  store-selected: true
+
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  force-dns-mapping: true
+  sniff:
+    HTTP:
+    TLS:
+    QUIC:
+
+proxies:
+- name: "GERMANY"
+  type: vless
+  server: '****'
+  port: 8443
+  uuid: '****'
+  udp: true
+  tls: true
+  servername: 'yahoo.com'
+  skip-cert-verify: false
+  client-fingerprint: 'chrome'
+  network: 'tcp'
+  reality-opts:
+    public-key: '****'
+    short-id: 'd0'
+- name: "RUSSIA"
+  type: vless
+  server: '****'
+  port: 8443
+  uuid: '****'
+  udp: true
+  tls: true
+  servername: 'yahoo.com'
+  skip-cert-verify: false
+  client-fingerprint: 'chrome'
+  network: 'tcp'
+  reality-opts:
+    public-key: '****'
+    short-id: 'd0'
+- name: "NIDERLAND"
+  type: vless
+  server: '****'
+  port: 8443
+  uuid: '****'
+  udp: true
+  tls: true
+  servername: 'yahoo.com'
+  skip-cert-verify: false
+  client-fingerprint: 'chrome'
+  network: 'tcp'
+  reality-opts:
+    public-key: '****'
+    short-id: 'd0'
+
+proxy-groups:
+
+  - name: TikTok
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: JetBrains
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AI.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: YouTube
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Discord
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Twitch
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitch.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Reddit
+    type: select
+    icon: https://www.redditstatic.com/shreddit/assets/favicon/192x192.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Meta
+    type: select
+    icon: https://github.com/zxc-rv/assets/raw/refs/heads/main/group-icons/meta.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Spotify
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Spotify.png
+    include-all: true
+    exclude-filter: 🇷🇺
+    proxies:
+      - DIRECT
+
+  - name: Telegram
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Steam
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Steam.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Cloudflare
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: AI
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bot.png
+    include-all: true
+    exclude-filter: 🇷🇺
+    proxies:
+      - DIRECT
+
+  - name: Twitter
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+
+
+rule-providers:
+  discord-voice-ips:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://github.com/legiz-ru/mihomo-rule-sets/raw/main/other/discord-voice-ip-list.mrs
+    path: ./rule-providers/discord-voice-ips.mrs
+    interval: 86400
+  cloudflare-ips:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cloudflare.mrs
+    path: ./rule-providers/cloudflare-ips.mrs
+    interval: 86400
+  telegram-ips:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs
+    path: ./rule-providers/telegram-ips.mrs
+    interval: 86400
+
+
+rules:
+  - DOMAIN,metacubex.one,YouTube
+
+  - GEOSITE,category-ai-!cn,AI
+  - GEOSITE,steam,Steam
+  - GEOSITE,spotify,Spotify
+  - GEOSITE,jetbrains,JetBrains
+  - GEOSITE,meta,Meta
+  - GEOSITE,reddit,Reddit
+  - GEOSITE,tiktok,TikTok
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,twitch,Twitch
+  - GEOSITE,twitter,Twitter
+  - OR,((GEOSITE,discord),(RULE-SET,discord-voice-ips,no-resolve)),Discord
+  - OR,((GEOSITE,telegram),(RULE-SET,telegram-ips,no-resolve)),Telegram
+  - OR,((GEOSITE,cloudflare),(RULE-SET,cloudflare-ips)),Cloudflare
+  - MATCH,DIRECT

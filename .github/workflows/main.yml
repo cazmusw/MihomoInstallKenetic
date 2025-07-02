@@ -32,12 +32,11 @@ jobs:
         env:
           NO_SKIP: true
         run: |
-         mkdir -p other
-         curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://raw.githubusercontent.com/legiz-ru/sb-rule-sets/refs/heads/main/ru-app-list.json | jq -r '.rules[].rules[].package_name[]' | sed 's/^/ - PROCESS-NAME,/' | sed '1i payload:' > other/ru-app-list.yaml
+         mkdir -p rulesets
          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/GhostRooter0953/discord-voice-ips/raw/master/voice_domains/discord-voice-ip-list -o discord-voice-ip-list.text
          sed -i 's/$/\/32/' discord-voice-ip-list.text
          mihomo convert-ruleset ipcidr text discord-voice-ip-list.text discord-voice-ip-list.mrs
-
+         mv discord-voice-ip-list.mrs rulesets/
       - name: Delete temp file
         run: |
           rm discord-voice-ip-list.text

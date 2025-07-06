@@ -21,8 +21,10 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y curl wget git jq
-         
+          sudo apt install -y curl wget git jq dig
+      - name: Parse Discord Domains
+        run: |
+          python3 scripts/ParseDiscordDomains.py
       - name: Download and install Mihomo
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.9/mihomo-linux-amd64-v1.19.9.deb -o mihomo-linux-amd64-v1.19.9.deb
@@ -33,7 +35,6 @@ jobs:
           NO_SKIP: true
         run: |
          mkdir -p rulesets
-         curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/GhostRooter0953/discord-voice-ips/raw/master/voice_domains/discord-voice-ip-list -o discord-voice-ip-list.text
          sed -i 's/$/\/32/' discord-voice-ip-list.text
          mihomo convert-ruleset ipcidr text discord-voice-ip-list.text discord-voice-ip-list.mrs
          mv discord-voice-ip-list.mrs rulesets/

@@ -23,7 +23,7 @@ lock = threading.Lock()
 def log_success(message):
     print(f"{GREEN}[OK]{NC} {message}")
 
-DEFAULT_REGIONS = ["bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia"]
+DEFAULT_REGIONS = ["bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil"]
 TOTAL_DOMAINS = 15000
 PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 500))
 

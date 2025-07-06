@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y curl wget git jq dig
+          sudo apt install -y curl wget git jq
       - name: Parse Discord Domains
         run: |
           python3 scripts/ParseDiscordDomains.py

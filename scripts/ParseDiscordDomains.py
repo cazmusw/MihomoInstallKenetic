@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-import sys
 import subprocess
 import threading
-import time
-from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
+
 from tqdm import tqdm
+
 # Цвета
 RED = '\033[0;31m'
 GREEN = '\033[0;32m'

@@ -52,7 +52,7 @@ for region in tqdm(DEFAULT_REGIONS):
 
     with ThreadPoolExecutor(max_workers=PARALLEL_JOBS) as executor:
         futures = [executor.submit(resolve_domain, domain) for domain in domains]
-        for future in tqdm(futures):
+        for future in tqdm(futures, ascii=True, desc=f"Parsing Discord {region}: "):
             results = future.result()
             iplist.extend(results)
 

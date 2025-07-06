@@ -78,7 +78,7 @@ proxy-groups:
 
   - name: JetBrains
     type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AI.png
+    icon: https://github.com/cazmusw/MihomoInstallKenetic/blob/main/icons/jetbrains.png
     include-all: true
     proxies:
       - DIRECT
@@ -169,7 +169,7 @@ rule-providers:
     type: http
     behavior: ipcidr
     format: mrs
-    url: https://github.com/legiz-ru/mihomo-rule-sets/raw/main/other/discord-voice-ip-list.mrs
+    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/discord-voice-ip-list.mrs
     path: ./rule-providers/discord-voice-ips.mrs
     interval: 86400
   cloudflare-ips:

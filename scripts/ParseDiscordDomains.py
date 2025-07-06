@@ -7,7 +7,7 @@ import threading
 import time
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
-
+from tqdm import tqdm
 # Цвета
 RED = '\033[0;31m'
 GREEN = '\033[0;32m'
@@ -20,11 +20,6 @@ NC = '\033[0m'
 
 lock = threading.Lock()
 
-def line_skip():
-    print(". . .")
-
-def log_info(message):
-    print(f"{CYAN}[INFO]{NC} {message}")
 
 def log_success(message):
     print(f"{GREEN}[OK]{NC} {message}")
@@ -43,8 +38,6 @@ def resolve_domain(domain):
         ips = [line.strip() for line in result.stdout.splitlines()
                if line.strip() and not line.strip().startswith(';;')]
 
-        log_info("Проверяем домен " + domain)
-
     except subprocess.TimeoutExpired:
         ips = []
 
@@ -54,28 +47,15 @@ open(ALL_IP_LIST, 'w').close()
 
 iplist = []
 
-for region in DEFAULT_REGIONS:
-    line_skip()
-
-    start_time = time.time()
-    start_date = datetime.now().strftime("%d.%m.%Y в %H:%M:%S")
-
+for region in tqdm(DEFAULT_REGIONS):
     domains = [f"{region}{i}.discord.gg" for i in range(1, TOTAL_DOMAINS + 1)]
-    log_info(f"Резолвим домены региона {region}...")
 
     with ThreadPoolExecutor(max_workers=PARALLEL_JOBS) as executor:
         futures = [executor.submit(resolve_domain, domain) for domain in domains]
-        for future in futures:
+        for future in tqdm(futures):
             results = future.result()
             iplist.extend(results)
 
-
-
-    end_time = time.time()
-    execution_time = int(end_time - start_time)
-
-    log_info(f"Время запуска: {MAGENTA}{start_date}{NC}")
-    log_info(f"Время выполнения: {MAGENTA}{time.strftime('%H:%M:%S', time.gmtime(execution_time))}{NC}")
 
 iplist.sort()
 
@@ -87,6 +67,5 @@ if os.path.isfile(ALL_IP_LIST):
     with open(ALL_IP_LIST) as f:
         ip_count = sum(1 for _ in f)
 
-line_skip()
 log_success(f'Обновлён список "{YELLOW}{BOLD}{ALL_IP_LIST}{NC}"')
 log_success(f"Всего адресов зарезолвили: {MAGENTA}{ip_count}{NC}")

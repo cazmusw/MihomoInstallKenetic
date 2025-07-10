@@ -27,7 +27,7 @@ DEFAULT_REGIONS = ["bucharest", "finland", "frankfurt", "madrid", "milan", "rott
 TOTAL_DOMAINS = 15000
 PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 500))
 
-ALL_IP_LIST = "./discord-voice-ip-list.text"
+ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
 
 def resolve_domain(domain):
 

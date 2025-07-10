@@ -162,6 +162,12 @@ proxy-groups:
     proxies:
       - DIRECT
 
+  - name: Amazon
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Amazon.png
+    include-all: true
+    proxies:
+      - DIRECT
 
 
 rule-providers:
@@ -171,25 +177,33 @@ rule-providers:
     format: mrs
     url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/discord-voice-ip-list.mrs
     path: ./rule-providers/discord-voice-ips.mrs
-    interval: 86400
+    interval: 43200
   cloudflare-ips:
     type: http
     behavior: ipcidr
     format: mrs
-    url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cloudflare.mrs
+    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/cloudflare.mrs
     path: ./rule-providers/cloudflare-ips.mrs
-    interval: 86400
+    interval: 43200
+  amazon-ips:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/amazon.mrs
+    path: ./rule-providers/cloudflare-ips.mrs
+    interval: 43200
   telegram-ips:
     type: http
     behavior: ipcidr
     format: mrs
     url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs
     path: ./rule-providers/telegram-ips.mrs
-    interval: 86400
+    interval: 43200
 
 
 rules:
   - DOMAIN,metacubex.one,YouTube
+  - DOMAIN,chrome.google.com,YouTube
 
   - GEOSITE,category-ai-!cn,AI
   - GEOSITE,steam,Steam
@@ -204,4 +218,5 @@ rules:
   - OR,((GEOSITE,discord),(RULE-SET,discord-voice-ips,no-resolve)),Discord
   - OR,((GEOSITE,telegram),(RULE-SET,telegram-ips,no-resolve)),Telegram
   - OR,((GEOSITE,cloudflare),(RULE-SET,cloudflare-ips)),Cloudflare
+  - OR,((GEOSITE,amazon),(RULE-SET,amazon-ips)),Amazon
   - MATCH,DIRECT

@@ -27,6 +27,12 @@ jobs:
           mkdir -p ip-sets
           pip install tqdm
           python3 scripts/ParseDiscordDomains.py
+
+      - name: Download ip-sets
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/cloudflare.list -o ./ip-sets/cloudflare.text
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://raw.githubusercontent.com/V3nilla/IPSets-For-Bypass-in-Russia/refs/heads/main/ipset-amazon.txt -o ./ip-sets/amazon.text
+
       - name: Download and install Mihomo
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.9/mihomo-linux-amd64-v1.19.9.deb -o mihomo-linux-amd64-v1.19.9.deb
@@ -37,13 +43,24 @@ jobs:
           NO_SKIP: true
         run: |
          mkdir -p rulesets
-         cp ./ip-sets/discord-voice-ip-list.text ./discord-voice-ip-list.text
+         cp ./ip-sets/* ./
+          
+         sed -i 's/$/\/32/' cloudflare.text    
+         sed -i 's/$/\/32/' amazon.text
          sed -i 's/$/\/32/' discord-voice-ip-list.text
+          
          mihomo convert-ruleset ipcidr text discord-voice-ip-list.text discord-voice-ip-list.mrs
+         mihomo convert-ruleset ipcidr text amazon.text amazon.mrs
+         mihomo convert-ruleset ipcidr text cloudflare.text cloudflare.mrs
+          
          mv discord-voice-ip-list.mrs rulesets/
+         mv amazon.mrs rulesets/
+         mv cloudflare.mrs rulesets/
       - name: Delete temp file
         run: |
           rm discord-voice-ip-list.text
+          rm amazon.text
+          rm cloudflare.text
           rm mihomo-linux-amd64-v1.19.9.deb
           
       - name: Get current date

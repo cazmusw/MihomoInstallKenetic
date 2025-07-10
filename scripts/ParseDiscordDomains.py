@@ -23,7 +23,10 @@ lock = threading.Lock()
 def log_success(message):
     print(f"{GREEN}[OK]{NC} {message}")
 
-DEFAULT_REGIONS = ["bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil", "hongkong", "india", "japan", "singapore", "southafrica", "sydney", "us-central"]
+DEFAULT_REGIONS = [
+    "bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil",
+    "hongkong", "india", "japan", "singapore", "southafrica", "sydney", "us-central"
+]
 TOTAL_DOMAINS = 15000
 PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 200))
 
@@ -59,7 +62,7 @@ for region in tqdm(DEFAULT_REGIONS):
 iplist.sort()
 
 with open(ALL_IP_LIST, 'a') as f_out:
-    f_out.write('\n'.join(iplist) + '\n')
+    f_out.write('\n'.join(set(iplist)) + '\n')
 
 ip_count = 0
 if os.path.isfile(ALL_IP_LIST):

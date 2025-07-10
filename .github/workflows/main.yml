@@ -24,6 +24,7 @@ jobs:
           sudo apt install -y curl wget git jq
       - name: Parse Discord Domains
         run: |
+          mkdir -p ip-sets
           pip install tqdm
           python3 scripts/ParseDiscordDomains.py
       - name: Download and install Mihomo

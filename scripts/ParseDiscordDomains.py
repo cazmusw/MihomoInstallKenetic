@@ -23,9 +23,9 @@ lock = threading.Lock()
 def log_success(message):
     print(f"{GREEN}[OK]{NC} {message}")
 
-DEFAULT_REGIONS = ["bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil"]
+DEFAULT_REGIONS = ["bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil", "hongkong", "india", "japan", "singapore", "southafrica", "sydney", "us-central"]
 TOTAL_DOMAINS = 15000
-PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 500))
+PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 200))
 
 ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
 

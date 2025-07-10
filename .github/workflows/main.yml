@@ -45,10 +45,8 @@ jobs:
          mkdir -p rulesets
          cp ./ip-sets/* ./
           
-         sed -i 's/$/\/32/' cloudflare.text    
-         sed -i 's/$/\/32/' amazon.text
          sed -i 's/$/\/32/' discord-voice-ip-list.text
-          
+
          mihomo convert-ruleset ipcidr text discord-voice-ip-list.text discord-voice-ip-list.mrs
          mihomo convert-ruleset ipcidr text amazon.text amazon.mrs
          mihomo convert-ruleset ipcidr text cloudflare.text cloudflare.mrs

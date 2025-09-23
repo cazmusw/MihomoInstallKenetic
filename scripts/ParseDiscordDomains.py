@@ -25,10 +25,10 @@ def log_success(message):
 
 DEFAULT_REGIONS = [
     "bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil",
-    "hongkong", "india", "japan", "singapore", "southafrica", "sydney", "us-central"
+    "hongkong", "india", "japan", "singapore", "southafrica", "sydney", "us-central", "us-west", "us-east", "us-south"
 ]
-TOTAL_DOMAINS = 15000
-PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 200))
+TOTAL_DOMAINS = 30000
+PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 400))
 
 ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
 

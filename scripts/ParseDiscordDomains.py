@@ -34,6 +34,12 @@ TOTAL_DOMAINS = 18000
 PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", min(100, os.cpu_count() * 5)))
 
 ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
+HISTORY_FILE = "./ip-sets/discord-voice-ip-history.text"
+
+old_ips = set()
+if os.path.isfile(HISTORY_FILE):
+    with open(HISTORY_FILE, 'r') as f_in:
+        old_ips = set(line.strip() for line in f_in if line.strip())
 
 def resolve_domain(domain):
     try:
@@ -58,6 +64,12 @@ for region in tqdm(DEFAULT_REGIONS):
 
 unique_ips = sorted(set(iplist))
 with open(ALL_IP_LIST, 'w') as f_out:
+    f_out.write('\n'.join(unique_ips) + '\n')
+
+unique_ips.append(old_ips)
+unique_ips = sorted(unique_ips)
+
+with open(HISTORY_FILE, 'w') as f_out:
     f_out.write('\n'.join(unique_ips) + '\n')
 
 ip_count = 0

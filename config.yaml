@@ -1,15 +1,13 @@
+redir-port: 1182
 tproxy-port: 5000
 mixed-port: 1080
 allow-lan: true
 log-level: silent
-geodata-mode: true
-geo-auto-update: true
-geo-update-interval: 72
-mode: rule
+find-process-mode: off
 ipv6: false
-external-controller: 0.0.0.0:9090
 external-ui: zashboard
 external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+external-controller: 0.0.0.0:9090
 
 profile:
   store-selected: true
@@ -17,7 +15,6 @@ profile:
 sniffer:
   enable: true
   parse-pure-ip: true
-  force-dns-mapping: true
   sniff:
     HTTP:
     TLS:
@@ -68,7 +65,12 @@ proxies:
     short-id: 'd0'
 
 proxy-groups:
-
+  - name: QUIC
+    type: select
+    icon: https://github.com/zxc-rv/assets/raw/refs/heads/main/group-icons/quic.png
+    proxies:
+      - REJECT
+      - PASS
   - name: TikTok
     type: select
     icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png
@@ -170,12 +172,35 @@ proxy-groups:
       - DIRECT
 
 
+  - name: Instagram
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Instagram.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Mozilla
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Star.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+  - name: Github
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Star.png
+    include-all: true
+    proxies:
+      - DIRECT
+
+
 rule-providers:
+
   discord-voice-ips:
     type: http
     behavior: ipcidr
     format: mrs
-    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/discord-voice-ip-list.mrs
+    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/discord-voice-ip-history.mrs
     path: ./rule-providers/discord-voice-ips.mrs
     interval: 43200
   cloudflare-ips:
@@ -199,22 +224,48 @@ rule-providers:
     url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs
     path: ./rule-providers/telegram-ips.mrs
     interval: 43200
-
-
+  zkeen_domains_youtube:
+    type: http
+    behavior: classical
+    format: text
+    url: https://github.com/toneywhitez/zkeen_rules/releases/latest/download/youtube.list
+    path: ./rule-providers/zkeen_domains_youtube.list
+    interval: 86400
+  zkeen_ip_ru:
+    type: http
+    behavior: classical
+    format: text
+    url: https://github.com/toneywhitez/zkeen_rules/releases/latest/download/ru_ips.list
+    path: ./rule-providers/zkeen_ip_ru.list
+    interval: 86400
 rules:
-  - DOMAIN,metacubex.one,YouTube
-  - DOMAIN,chrome.google.com,YouTube
 
-  - GEOSITE,category-ai-!cn,AI
+  - AND,((NOT,((RULE-SET,zkeen_ip_ru,no-resolve))),(NETWORK,UDP),(DST-PORT,443)),QUIC # Блокировка QUIC на ВНЕ РУ (!Zkeen RU IPs)
+
+
+  - RULE-SET,zkeen_domains_youtube,YouTube
+
+  - GEOSITE,oracle,JetBrains
+
+  - GEOSITE,mozilla,Mozilla
+  - GEOSITE,github,Github
+
   - GEOSITE,steam,Steam
   - GEOSITE,spotify,Spotify
   - GEOSITE,jetbrains,JetBrains
+  - GEOSITE,jetbrains-ai,JetBrains
+
   - GEOSITE,meta,Meta
   - GEOSITE,reddit,Reddit
   - GEOSITE,tiktok,TikTok
-  - GEOSITE,youtube,YouTube
+  - GEOSITE,instagram,Instagram
+
+
   - GEOSITE,twitch,Twitch
   - GEOSITE,twitter,Twitter
+
+  - GEOSITE,category-ai-!cn,AI
+
   - OR,((GEOSITE,discord),(RULE-SET,discord-voice-ips,no-resolve)),Discord
   - OR,((GEOSITE,telegram),(RULE-SET,telegram-ips,no-resolve)),Telegram
   - OR,((GEOSITE,cloudflare),(RULE-SET,cloudflare-ips)),Cloudflare

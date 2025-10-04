@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-import subprocess
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
+import dns.resolver
 from tqdm import tqdm
 
 # Цвета
@@ -24,26 +24,23 @@ def log_success(message):
     print(f"{GREEN}[OK]{NC} {message}")
 
 DEFAULT_REGIONS = [
-    "bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia", "brazil",
-    "hongkong", "india", "japan", "singapore", "southafrica", "sydney", "us-central", "us-west", "us-east", "us-south"
+    "bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia",
+    "brazil", "hongkong", "india", "japan", "singapore", "southafrica", "sydney",
+    "us-central", "us-west", "us-east", "us-south",
+    # добавим недостающие:
+    "london", "paris", "dubai", "chile", "mexico", "south-korea", "canada"
 ]
-TOTAL_DOMAINS = 30000
-PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", 400))
+TOTAL_DOMAINS = 18000
+PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", min(100, os.cpu_count() * 5)))
 
 ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
 
 def resolve_domain(domain):
-
     try:
-        result = subprocess.run(['dig', '+short', 'A', domain],
-                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True, timeout=10)
-        ips = [line.strip() for line in result.stdout.splitlines()
-               if line.strip() and not line.strip().startswith(';;')]
-
-    except subprocess.TimeoutExpired:
-        ips = []
-
-    return ips
+        answers = dns.resolver.resolve(domain, 'A')
+        return [str(rdata) for rdata in answers]
+    except Exception:
+        return []
 
 open(ALL_IP_LIST, 'w').close()
 
@@ -59,10 +56,9 @@ for region in tqdm(DEFAULT_REGIONS):
             iplist.extend(results)
 
 
-iplist.sort()
-
-with open(ALL_IP_LIST, 'a') as f_out:
-    f_out.write('\n'.join(set(iplist)) + '\n')
+unique_ips = sorted(set(iplist))
+with open(ALL_IP_LIST, 'w') as f_out:
+    f_out.write('\n'.join(unique_ips) + '\n')
 
 ip_count = 0
 if os.path.isfile(ALL_IP_LIST):

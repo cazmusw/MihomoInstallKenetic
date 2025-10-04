@@ -26,6 +26,7 @@ jobs:
         run: |
           mkdir -p ip-sets
           pip install tqdm
+          pip install dnspython
           python3 scripts/ParseDiscordDomains.py
 
       - name: Download ip-sets

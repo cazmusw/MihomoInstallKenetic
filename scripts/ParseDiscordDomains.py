@@ -27,11 +27,14 @@ DEFAULT_REGIONS = [
     "bucharest", "finland", "frankfurt", "madrid", "milan", "rotterdam", "stockholm", "warsaw", "russia",
     "brazil", "hongkong", "india", "japan", "singapore", "southafrica", "sydney",
     "us-central", "us-west", "us-east", "us-south",
-    # добавим недостающие:
-    "london", "paris", "dubai", "chile", "mexico", "south-korea", "canada"
+    "london", "paris", "dubai", "chile", "mexico", "south-korea", "canada",
+
+    # на будущее
+    "seattle", "atlanta", "chicago", "newark", "dallas", "miami", "losangeles", "toronto", "santiago",
+    "manila", "jakarta", "taiwan", "istanbul", "riyadh", "uae", "auckland"
 ]
 TOTAL_DOMAINS = 18000
-PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", min(100, os.cpu_count() * 5)))
+PARALLEL_JOBS = int(os.environ.get("PARALLEL_JOBS", min(200, os.cpu_count() * 10)))
 
 ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
 HISTORY_FILE = "./ip-sets/discord-voice-ip-history.text"
@@ -40,6 +43,8 @@ old_ips = set()
 if os.path.isfile(HISTORY_FILE):
     with open(HISTORY_FILE, 'r') as f_in:
         old_ips = set(line.strip() for line in f_in if line.strip())
+open(HISTORY_FILE, 'w').close()
+
 
 def resolve_domain(domain):
     try:
@@ -66,11 +71,10 @@ unique_ips = sorted(set(iplist))
 with open(ALL_IP_LIST, 'w') as f_out:
     f_out.write('\n'.join(unique_ips) + '\n')
 
-unique_ips.append(old_ips)
-unique_ips = sorted(unique_ips)
+merged_ips = sorted(set(unique_ips).union(old_ips))
 
 with open(HISTORY_FILE, 'w') as f_out:
-    f_out.write('\n'.join(unique_ips) + '\n')
+    f_out.write('\n'.join(merged_ips) + '\n')
 
 ip_count = 0
 if os.path.isfile(ALL_IP_LIST):

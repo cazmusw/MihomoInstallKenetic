@@ -32,7 +32,6 @@ jobs:
       - name: Download ip-sets
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geoip/cloudflare.list -o ./ip-sets/cloudflare.text
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://raw.githubusercontent.com/V3nilla/IPSets-For-Bypass-in-Russia/refs/heads/main/ipset-amazon.txt -o ./ip-sets/amazon.text
 
       - name: Download and install Mihomo
         run: |
@@ -51,20 +50,15 @@ jobs:
 
          mihomo convert-ruleset ipcidr text discord-voice-ip-list.text discord-voice-ip-list.mrs
          mihomo convert-ruleset ipcidr text discord-voice-ip-history.text discord-voice-ip-history.mrs
-          
-          
-         mihomo convert-ruleset ipcidr text amazon.text amazon.mrs
          mihomo convert-ruleset ipcidr text cloudflare.text cloudflare.mrs
           
          mv discord-voice-ip-list.mrs rulesets/
          mv discord-voice-ip-history.mrs rulesets/
-         mv amazon.mrs rulesets/
          mv cloudflare.mrs rulesets/
       - name: Delete temp file
         run: |
           rm discord-voice-ip-list.text
           rm discord-voice-ip-history.text
-          rm amazon.text
           rm cloudflare.text
           rm mihomo-linux-amd64-v1.19.9.deb
           

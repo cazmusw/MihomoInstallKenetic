@@ -1,273 +1,216 @@
-redir-port: 1182
-tproxy-port: 5000
-mixed-port: 1080
-allow-lan: true
 log-level: silent
-find-process-mode: off
-ipv6: false
-external-ui: zashboard
-external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+allow-lan: true
+redir-port: 5000
+tproxy-port: 5001
+ipv6: true
+mode: rule
 external-controller: 0.0.0.0:9090
-
-profile:
-  store-selected: true
+external-ui: zashboard
+external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
+profile: { store-selected: true }
 
 sniffer:
   enable: true
-  parse-pure-ip: true
   sniff:
     HTTP:
     TLS:
     QUIC:
 
-proxies:
-- name: "GERMANY"
-  type: vless
-  server: '****'
-  port: 8443
-  uuid: '****'
-  udp: true
-  tls: true
-  servername: 'yahoo.com'
-  skip-cert-verify: false
-  client-fingerprint: 'chrome'
-  network: 'tcp'
-  reality-opts:
-    public-key: '****'
-    short-id: 'd0'
-- name: "RUSSIA"
-  type: vless
-  server: '****'
-  port: 8443
-  uuid: '****'
-  udp: true
-  tls: true
-  servername: 'yahoo.com'
-  skip-cert-verify: false
-  client-fingerprint: 'chrome'
-  network: 'tcp'
-  reality-opts:
-    public-key: '****'
-    short-id: 'd0'
-- name: "NIDERLAND"
-  type: vless
-  server: '****'
-  port: 8443
-  uuid: '****'
-  udp: true
-  tls: true
-  servername: 'yahoo.com'
-  skip-cert-verify: false
-  client-fingerprint: 'chrome'
-  network: 'tcp'
-  reality-opts:
-    public-key: '****'
-    short-id: 'd0'
+anchors:
+  a1: &domain { type: http, format: mrs, behavior: domain, interval: 86400 }
+  a2: &ipcidr { type: http, format: mrs, behavior: ipcidr, interval: 86400 }
+  a3: &classical { type: http, format: text, behavior: classical, interval: 86400 }
+  a4: &inline { type: inline, behavior: classical }
+
+proxy-providers:
+  sub:
+    type: http
+    url: "sub-link"
+    path: ./proxy_providers/sub.yml
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      timeout: 5000
+      lazy: true
+      expected-status: 204
 
 proxy-groups:
   - name: QUIC
     type: select
-    icon: https://github.com/zxc-rv/assets/raw/refs/heads/main/group-icons/quic.png
-    proxies:
-      - REJECT
-      - PASS
-  - name: TikTok
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png
-    include-all: true
-    proxies:
-      - DIRECT
+    icon: https://github.com/zxc-rv/assets/raw/main/group-icons/quic.png
+    proxies: [REJECT, PASS]
 
-  - name: JetBrains
+  - name: Блокировка рекламы
     type: select
-    icon: https://github.com/cazmusw/MihomoInstallKenetic/blob/main/icons/jetbrains.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: YouTube
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
+    proxies: [REJECT, PASS]
+    
+  - name: Заблок. сервисы
     type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Reject.png
     include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Discord
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Twitch
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitch.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Reddit
-    type: select
-    icon: https://www.redditstatic.com/shreddit/assets/favicon/192x192.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Meta
-    type: select
-    icon: https://github.com/zxc-rv/assets/raw/refs/heads/main/group-icons/meta.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Spotify
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Spotify.png
-    include-all: true
-    exclude-filter: 🇷🇺
-    proxies:
-      - DIRECT
-
-  - name: Telegram
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Steam
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Steam.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Cloudflare
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: AI
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bot.png
-    include-all: true
-    exclude-filter: 🇷🇺
-    proxies:
-      - DIRECT
-
-  - name: Twitter
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-  - name: Amazon
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Amazon.png
-    include-all: true
-    proxies:
-      - DIRECT
-
-
-  - name: Instagram
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Instagram.png
-    include-all: true
-    proxies:
-      - DIRECT
+    proxies: [REJECT, PASS]
 
   - name: Mozilla
     type: select
     icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Star.png
     include-all: true
-    proxies:
-      - DIRECT
+    proxies: [PASS, Заблок. сервисы]
 
-  - name: Github
+  - name: Microsoft
     type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Star.png
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png
     include-all: true
-    proxies:
-      - DIRECT
+    proxies: [PASS, Заблок. сервисы]
 
+  - name: JetBrains
+    type: select
+    icon: https://github.com/cazmusw/MihomoInstallKenetic/blob/main/icons/jetbrains.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Instagram
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Instagram.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: YouTube
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Discord
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Twitch
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitch.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Reddit
+    type: select
+    icon: https://www.redditstatic.com/shreddit/assets/favicon/192x192.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Meta
+    type: select
+    icon: https://github.com/zxc-rv/assets/raw/main/group-icons/meta.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Spotify
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Spotify.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Telegram
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Steam
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Steam.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Cloudflare
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Cloudflare.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+    
+  - name: Amazon
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Amazon.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Google
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: GitHub
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/GitHub.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: AI
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bot.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: Twitter
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
+
+  - name: TikTok
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png
+    include-all: true
+    proxies: [PASS, Заблок. сервисы]
 
 rule-providers:
+  amazon@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/amazon.mrs }
+  amazon@ipcidr: { <<: *ipcidr, url: https://github.com/PentiumB/CDN-RuleSet/releases/latest/download/amazon.mrs }
+  category-ai@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/category-ai-!cn.mrs }
+  cloudflare@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/cloudflare.mrs }
+  cloudflare@ipcidr: { <<: *ipcidr, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/cloudflare.mrs }
+  discord@classical: { <<: *classical, url: https://github.com/zxc-rv/assets/raw/main/rules/discord.list }
+  google@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/google.mrs }
+  github@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/github.mrs }
+  meta@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/facebook.mrs }
+  meta@ipcidr: { <<: *ipcidr, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/facebook.mrs }
+  reddit@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/reddit.mrs }
+  spotify@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/spotify.mrs }
+  steam@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/steam.mrs }
+  telegram@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/telegram.mrs }
+  telegram@ipcidr: { <<: *ipcidr, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/telegram.mrs }
+  twitch@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/twitch.mrs }
+  twitter@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/twitter.mrs }
+  youtube@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/youtube.mrs }
 
-  discord-voice-ips:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/discord-voice-ip-history.mrs
-    path: ./rule-providers/discord-voice-ips.mrs
-    interval: 43200
-  cloudflare-ips:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/cloudflare.mrs
-    path: ./rule-providers/cloudflare-ips.mrs
-    interval: 43200
-  amazon-ips:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/amazon.mrs
-    path: ./rule-providers/cloudflare-ips.mrs
-    interval: 43200
-  telegram-ips:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    url: https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs
-    path: ./rule-providers/telegram-ips.mrs
-    interval: 43200
-  zkeen_domains_youtube:
-    type: http
-    behavior: classical
-    format: text
-    url: https://github.com/toneywhitez/zkeen_rules/releases/latest/download/youtube.list
-    path: ./rule-providers/zkeen_domains_youtube.list
-    interval: 86400
-  zkeen_ip_ru:
-    type: http
-    behavior: classical
-    format: text
-    url: https://github.com/toneywhitez/zkeen_rules/releases/latest/download/ru_ips.list
-    path: ./rule-providers/zkeen_ip_ru.list
-    interval: 86400
 rules:
+  - GEOSITE,category-ads-all,Блокировка рекламы
 
-  - AND,((NOT,((RULE-SET,zkeen_ip_ru,no-resolve))),(NETWORK,UDP),(DST-PORT,443)),QUIC # Блокировка QUIC на ВНЕ РУ (!Zkeen RU IPs)
+  - AND,((DST-PORT,443),(NETWORK,UDP)),QUIC
+  - OR,((DOMAIN-SUFFIX,gql.twitch.tv),(DOMAIN-SUFFIX,usher.ttvnw.net)),Twitch 
+  - RULE-SET,category-ai@domain,AI
+  - RULE-SET,steam@domain,Steam
+  - RULE-SET,spotify@domain,Spotify
+  - RULE-SET,reddit@domain,Reddit
+  - RULE-SET,youtube@domain,YouTube
+  - RULE-SET,twitch@domain,Twitch
+  - RULE-SET,twitter@domain,Twitter
+  - RULE-SET,discord@classical,Discord
+  - OR,((RULE-SET,meta@domain),(RULE-SET,meta@ipcidr,no-resolve)),Meta
+  - OR,((RULE-SET,telegram@domain),(RULE-SET,telegram@ipcidr,no-resolve)),Telegram
+  - OR,((RULE-SET,cloudflare@domain),(RULE-SET,cloudflare@ipcidr)),Cloudflare
+  - OR,((RULE-SET,amazon@domain),(RULE-SET,amazon@ipcidr)),Amazon
+  - RULE-SET,google@domain,Google
+  - RULE-SET,github@domain,GitHub
 
-
-  - RULE-SET,zkeen_domains_youtube,YouTube
-
-  - GEOSITE,oracle,JetBrains
-
-  - GEOSITE,mozilla,Mozilla
-  - GEOSITE,github,Github
-
-  - GEOSITE,steam,Steam
-  - GEOSITE,spotify,Spotify
   - GEOSITE,jetbrains,JetBrains
-  - GEOSITE,jetbrains-ai,JetBrains
-
-  - GEOSITE,meta,Meta
-  - GEOSITE,reddit,Reddit
   - GEOSITE,tiktok,TikTok
+  - GEOSITE,mozilla,Mozilla
+  - GEOSITE,microsoft,Microsoft
   - GEOSITE,instagram,Instagram
 
-
-  - GEOSITE,twitch,Twitch
-  - GEOSITE,twitter,Twitter
-
-  - GEOSITE,category-ai-!cn,AI
-
-  - OR,((GEOSITE,discord),(RULE-SET,discord-voice-ips,no-resolve)),Discord
-  - OR,((GEOSITE,telegram),(RULE-SET,telegram-ips,no-resolve)),Telegram
-  - OR,((GEOSITE,cloudflare),(RULE-SET,cloudflare-ips)),Cloudflare
-  - OR,((GEOSITE,amazon),(RULE-SET,amazon-ips)),Amazon
   - MATCH,DIRECT

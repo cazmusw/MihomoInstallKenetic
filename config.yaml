@@ -173,6 +173,7 @@ rule-providers:
   category-ai@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/category-ai-!cn.mrs }
   cloudflare@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/cloudflare.mrs }
   cloudflare@ipcidr: { <<: *ipcidr, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/cloudflare.mrs }
+  discord@ipcidr: { <<: *ipcidr, url: https://github.com/cazmusw/MihomoInstallKenetic/raw/refs/heads/main/rulesets/discord-voice-ip-history.mrs }
   discord@classical: { <<: *classical, url: https://github.com/zxc-rv/assets/raw/main/rules/discord.list }
   google@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/google.mrs }
   github@domain: { <<: *domain, url: https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/github.mrs }

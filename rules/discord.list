@@ -1,3 +1,2 @@
 PROCESS-NAME-REGEX,^([Dd]iscord(\.exe)?|com\.discord)$
 AND,((DOMAIN-KEYWORD,discord),(NOT,((DOMAIN-SUFFIX,ru))))
-AND,((RULE-SET,discord-voice-ips,no-resolve),(NETWORK,UDP),(DST-PORT,50000-50100))

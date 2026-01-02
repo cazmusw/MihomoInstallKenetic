@@ -1,2 +1,1 @@
-PROCESS-NAME-REGEX,^([Dd]iscord(\.exe)?|com\.discord)$
 AND,((DOMAIN-KEYWORD,discord),(NOT,((DOMAIN-SUFFIX,ru))))

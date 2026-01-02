@@ -25,7 +25,7 @@ anchors:
 proxy-providers:
   sub:
     type: http
-    url: "Вставьте свою ссылку"
+    url: "enter your link"
     path: ./proxy_providers/sub.yml
     interval: 86400
     health-check:
@@ -36,7 +36,20 @@ proxy-providers:
       lazy: true
       expected-status: 204
 
+
 proxy-groups:
+
+  - name: Discord
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
+    include-all: true
+    proxies: [PASS, DIRECT, Заблок. сервисы]
+  - name: DiscordVoice
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
+    include-all: true
+    proxies: [PASS, DIRECT, Заблок. сервисы]
+
   - name: QUIC
     type: select
     icon: https://github.com/zxc-rv/assets/raw/main/group-icons/quic.png
@@ -83,16 +96,7 @@ proxy-groups:
     include-all: true
     proxies: [PASS, DIRECT, Заблок. сервисы]
 
-  - name: Discord
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
-    include-all: true
-    proxies: [PASS, DIRECT, Заблок. сервисы]
-  - name: DiscordVoice
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
-    include-all: true
-    proxies: [PASS, DIRECT, Заблок. сервисы]
+
 
   - name: Twitch
     type: select
@@ -211,10 +215,10 @@ rules:
   - RULE-SET,adlist@domain,Блокировка рекламы
 
   - AND,((DST-PORT,443),(NETWORK,UDP)),QUIC
-
+  
+  - RULE-SET,discord@ipcidr,DiscordVoice,no-resolve
   - RULE-SET,discord@classical,Discord
-  - AND,((RULE-SET,discord@ipcidr,no-resolve),(NETWORK,UDP),(DST-PORT,50000-50100)),DiscordVoice
-
+  
 
   - OR,((DOMAIN-SUFFIX,gql.twitch.tv),(DOMAIN-SUFFIX,usher.ttvnw.net)),Twitch 
   - OR,((GEOIP,HETZNER),(RULE-SET,hetzner@domain)),Hetzner

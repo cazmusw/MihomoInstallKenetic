@@ -2,7 +2,7 @@ log-level: silent
 allow-lan: true
 redir-port: 5000
 tproxy-port: 5001
-ipv6: true
+ipv6: false
 mode: rule
 external-controller: 0.0.0.0:9090
 external-ui: zashboard
@@ -11,6 +11,7 @@ profile: { store-selected: true }
 
 sniffer:
   enable: true
+  parse-pure-ip: true
   sniff:
     HTTP:
     TLS:

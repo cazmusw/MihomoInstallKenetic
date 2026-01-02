@@ -203,7 +203,7 @@ rule-providers:
   minecraft@classical: { <<: *classical, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rules/minecraft.list }
 
 rules:
-  - GEOSITE,adlist@domain,Блокировка рекламы
+  - RULE-SET,adlist@domain,Блокировка рекламы
 
   - AND,((DST-PORT,443),(NETWORK,UDP)),QUIC
   - OR,((DOMAIN-SUFFIX,gql.twitch.tv),(DOMAIN-SUFFIX,usher.ttvnw.net)),Twitch 

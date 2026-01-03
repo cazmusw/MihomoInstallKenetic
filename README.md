@@ -3,6 +3,14 @@
 Репозиторий содержит инструкцию по установке **XKeen Mihomo** и мои персональные настройки для панели.  
 Здесь также находится скрипт для автоматического парсинга IP голосового чата Discord — удобно для формирования списков IP-адресов в формате `ip-sets`.
 
+<p align="center">
+
+  <picture>
+    <img width="100%" height="100%" src="https://github.com/cazmusw/MihomoInstallKenetic/blob/main/icons/Demo.png?raw=true">
+  </picture>
+  
+</p>
+
 ---
 
 ## 🔧 Что внутри

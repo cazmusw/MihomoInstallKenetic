@@ -26,8 +26,7 @@
 Откройте терминал и выполните:
 
 ```bash
-  pip install tqdm
-  pip install dnspython
+  pip install aiofiles tqdm
   py .\scripts\ParseDiscordDomains.py
 ```
 

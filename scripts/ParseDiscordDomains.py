@@ -35,8 +35,8 @@ DEFAULT_REGIONS = [
 
 TOTAL_DOMAINS = 18000
 PARALLEL_JOBS = os.cpu_count() * 20
-ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.txt"
-HISTORY_FILE = "./ip-sets/discord-voice-ip-history.txt"
+ALL_IP_LIST = "./ip-sets/discord-voice-ip-list.text"
+HISTORY_FILE = "./ip-sets/discord-voice-ip-history.text"
 
 dns_executor = ThreadPoolExecutor(max_workers=PARALLEL_JOBS)
 

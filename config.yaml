@@ -26,7 +26,7 @@ anchors:
 proxy-providers:
   sub:
     type: http
-    url: "enter your link"
+    url: "https://subscribe.cazmusw.ru/kGqM4BV325g4-Yp_"
     path: ./proxy_providers/sub.yml
     interval: 86400
     health-check:
@@ -41,11 +41,6 @@ proxy-providers:
 proxy-groups:
 
   - name: Discord
-    type: select
-    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
-    include-all: true
-    proxies: [PASS, DIRECT, Заблок. сервисы]
-  - name: DiscordVoice
     type: select
     icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
     include-all: true
@@ -187,6 +182,16 @@ proxy-groups:
     icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
     include-all: true
     proxies: [PASS, DIRECT, Заблок. сервисы]
+  - name: DriverBooster
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+    include-all: true
+    proxies: [PASS, DIRECT, Заблок. сервисы]
+  - name: Razer
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+    include-all: true
+    proxies: [PASS, DIRECT, Заблок. сервисы]
 
 rule-providers:
   amazon@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/amazon-domain.mrs }
@@ -213,16 +218,13 @@ rule-providers:
   minecraft@classical: { <<: *classical, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rules/minecraft.list }
 
 rules:
+
   - RULE-SET,adlist@domain,Блокировка рекламы
 
   - AND,((DST-PORT,443),(NETWORK,UDP)),QUIC
-  
-  - RULE-SET,discord@ipcidr,DiscordVoice,no-resolve
-  - RULE-SET,discord@classical,Discord
-  
 
+  - OR,((RULE-SET,discord@ipcidr,no-resolve),(RULE-SET,discord@classical)),Discord
   - OR,((DOMAIN-SUFFIX,gql.twitch.tv),(DOMAIN-SUFFIX,usher.ttvnw.net)),Twitch 
-  - OR,((GEOIP,HETZNER),(RULE-SET,hetzner@domain)),Hetzner
 
   - RULE-SET,category-ai@domain,AI
   - RULE-SET,steam@domain,Steam
@@ -232,7 +234,6 @@ rules:
   - RULE-SET,twitch@domain,Twitch
   - RULE-SET,twitter@domain,Twitter
   - RULE-SET,minecraft@classical,MineCraft
-
 
   - OR,((RULE-SET,meta@domain),(RULE-SET,meta@ipcidr,no-resolve)),Meta
   - OR,((RULE-SET,telegram@domain),(RULE-SET,telegram@ipcidr,no-resolve)),Telegram
@@ -246,5 +247,9 @@ rules:
   - GEOSITE,mozilla,Mozilla
   - GEOSITE,microsoft,Microsoft
   - GEOSITE,instagram,Instagram
+  - GEOSITE,razer,Razer
+
+  - OR,((GEOIP,HETZNER),(RULE-SET,hetzner@domain)),Hetzner
+  - DOMAIN-SUFFIX,cd4o.com,DriverBooster
 
   - MATCH,DIRECT

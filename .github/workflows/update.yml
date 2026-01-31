@@ -1,8 +1,8 @@
-name: Generate mihomo 
+name: Update mrs
 
 on:
   schedule:
-    - cron: "30 1 * * *" 
+    - cron: "30 5 * * *" 
   workflow_dispatch:
   
 permissions:
@@ -21,12 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y curl wget git jq
-      - name: Parse Discord Domains
-        run: |
-          mkdir -p ip-sets
-          pip install aiofiles tqdm
-          python3 scripts/ParseDiscordDomains.py
+          sudo apt install -y curl wget jq
 
       - name: Download ip-sets
         run: |
@@ -51,33 +46,6 @@ jobs:
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/PentiumB/CDN-RuleSet/releases/latest/download/amazon.mrs -o ./rulesets/amazon-ipset.mrs
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/amazon.mrs -o ./rulesets/amazon-domain.mrs
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/oracle.mrs -o ./rulesets/oracle-domain.mrs
-
-      - name: Download and install Mihomo
-        run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.9/mihomo-linux-amd64-v1.19.9.deb -o mihomo-linux-amd64-v1.19.9.deb
-          sudo apt install --fix-missing ./mihomo-linux-amd64-v1.19.9.deb
-
-      - name: Generate other rulesets
-        env:
-          NO_SKIP: true
-        run: |
-         mkdir -p rulesets
-         cp ./ip-sets/* ./
-          
-         sed -i 's/$/\/32/' discord-voice-ip-list.text
-         sed -i 's/$/\/32/' discord-voice-ip-history.text
-
-         mihomo convert-ruleset ipcidr text discord-voice-ip-list.text discord-voice-ip-list.mrs
-         mihomo convert-ruleset ipcidr text discord-voice-ip-history.text discord-voice-ip-history.mrs
-          
-         mv discord-voice-ip-list.mrs rulesets/
-         mv discord-voice-ip-history.mrs rulesets/
-
-      - name: Delete temp file
-        run: |
-          rm discord-voice-ip-list.text
-          rm discord-voice-ip-history.text
-          rm mihomo-linux-amd64-v1.19.9.deb
           
       - name: Get current date
         id: date
@@ -89,5 +57,5 @@ jobs:
           git config --local user.email "cazmusw@users.noreply.github.com"
           git config --local user.name "cazmusw"
           git add .
-          git commit -m "Generating rule-sets ${{ env.DATE }}" -a || echo "No changes to commit"
+          git commit -m "Update other rule-sets ${{ env.DATE }}" -a || echo "No changes to commit"
           git push

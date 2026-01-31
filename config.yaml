@@ -192,6 +192,11 @@ proxy-groups:
     icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
     include-all: true
     proxies: [PASS, DIRECT, Заблок. сервисы]
+  - name: Oracle
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+    include-all: true
+    proxies: [PASS, DIRECT, Заблок. сервисы]
 
 rule-providers:
   amazon@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/amazon-domain.mrs }
@@ -216,6 +221,7 @@ rule-providers:
   adlist@domain: { <<: *domain, url: https://github.com/cazmusw/ad-filter/releases/latest/download/adlist.mrs }
   hetzner@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/hetzner-domain.mrs }
   minecraft@classical: { <<: *classical, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rules/minecraft.list }
+  oracle@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/oracle-domain.mrs }
 
 rules:
 
@@ -241,6 +247,8 @@ rules:
   - OR,((RULE-SET,amazon@domain),(RULE-SET,amazon@ipcidr)),Amazon
   - RULE-SET,google@domain,Google
   - RULE-SET,github@domain,GitHub
+  - RULE-SET,oracle@domain,Oracle
+
 
   - GEOSITE,jetbrains,JetBrains
   - GEOSITE,tiktok,TikTok

@@ -1,0 +1,61 @@
+name: Update mrs
+
+on:
+  schedule:
+    - cron: "30 5 * * *" 
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+
+jobs:
+  generate_lists:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Pull Changes
+        run: git pull
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y curl wget jq
+
+      - name: Download ip-sets
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/hetzner.mrs -o ./rulesets/hetzner-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/youtube.mrs -o ./rulesets/youtube-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/twitter.mrs -o ./rulesets/twitter-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/twitch.mrs -o ./rulesets/twitch-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/telegram.mrs -o ./rulesets/telegram-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/telegram.mrs -o ./rulesets/telegram-ipset.mrs
+
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/steam.mrs -o ./rulesets/steam-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/spotify.mrs -o ./rulesets/spotify-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/reddit.mrs -o ./rulesets/reddit-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/facebook.mrs -o ./rulesets/facebook-ipset.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/facebook.mrs -o ./rulesets/facebook-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/github.mrs -o ./rulesets/github-domain.mrs
+          
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/google.mrs -o ./rulesets/google-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geoip/cloudflare.mrs -o ./rulesets/cloudflare-ipset.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/cloudflare.mrs -o ./rulesets/cloudflare-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/category-ai-!cn.mrs -o ./rulesets/ai-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/PentiumB/CDN-RuleSet/releases/latest/download/amazon.mrs -o ./rulesets/amazon-ipset.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/amazon.mrs -o ./rulesets/amazon-domain.mrs
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/oracle.mrs -o ./rulesets/oracle-domain.mrs
+          
+      - name: Get current date
+        id: date
+        run: |
+          echo "DATE=$(TZ=Europe/Moscow date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "cazmusw@users.noreply.github.com"
+          git config --local user.name "cazmusw"
+          git add .
+          git commit -m "Update other rule-sets ${{ env.DATE }}" -a || echo "No changes to commit"
+          git push

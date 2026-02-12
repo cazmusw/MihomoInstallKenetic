@@ -1,0 +1,64 @@
+name: Parse Discord IPs
+
+on:
+  schedule:
+    - cron: "30 1 * * *" 
+  workflow_dispatch:
+  
+permissions:
+  contents: write
+
+jobs:
+  generate_lists:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Pull Changes
+        run: git pull
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y curl wget git jq
+      - name: Parse Discord Domains
+        run: |
+          mkdir -p ip-sets
+          pip install aiofiles tqdm
+          python3 scripts/discord.py
+
+      - name: Download and install Mihomo
+        run: |
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/mihomo/releases/download/v1.19.9/mihomo-linux-amd64-v1.19.9.deb -o mihomo-linux-amd64-v1.19.9.deb
+          sudo apt install --fix-missing ./mihomo-linux-amd64-v1.19.9.deb
+
+      - name: Generate other rulesets
+        env:
+          NO_SKIP: true
+        run: |
+         mkdir -p rulesets
+         cp ./ip-sets/* ./
+          
+         sed -i 's/$/\/32/' discord-voice-ip-history.text
+         mihomo convert-ruleset ipcidr text discord-voice-ip-history.text discord-voice-ip-history.mrs
+          
+         mv discord-voice-ip-history.mrs rulesets/
+
+      - name: Delete temp file
+        run: |
+          rm discord-voice-ip-history.text
+          rm mihomo-linux-amd64-v1.19.9.deb
+          
+      - name: Get current date
+        id: date
+        run: |
+          echo "DATE=$(TZ=Europe/Moscow date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "cazmusw@users.noreply.github.com"
+          git config --local user.name "cazmusw"
+          git add .
+          git commit -m "Generating rule-sets ${{ env.DATE }}" -a || echo "No changes to commit"
+          git push

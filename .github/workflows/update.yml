@@ -25,6 +25,8 @@ jobs:
 
       - name: Download ip-sets
         run: |
+          mkdir rulesets
+          
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/hetzner.mrs -o ./rulesets/hetzner-domain.mrs
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/youtube.mrs -o ./rulesets/youtube-domain.mrs
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L https://github.com/MetaCubeX/meta-rules-dat/raw/meta/geo/geosite/twitter.mrs -o ./rulesets/twitter-domain.mrs

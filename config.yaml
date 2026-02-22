@@ -292,7 +292,7 @@ rules:
   # END TIKTOK
 
   # START MOZILLA
-  - GEOSITE,mozilla,Mozilla # Мозилла домены
+  - GEOSITE,mozilla,MOZILLA # Мозилла домены
   # END MOZILLA
 
   # START MICROSOFT

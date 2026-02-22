@@ -1,0 +1,337 @@
+
+log-level: silent
+allow-lan: true
+redir-port: 5000
+tproxy-port: 5001
+ipv6: true
+mode: rule
+unified-delay: true
+find-process-mode: off
+external-controller: 0.0.0.0:9090
+external-ui: zashboard
+external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip
+profile: { store-selected: true }
+
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  sniff:
+    HTTP:
+    TLS:
+    QUIC:
+
+anchors:
+  a1: &domain { type: http, format: mrs, behavior: domain, interval: 86400 }
+  a2: &ipcidr { type: http, format: mrs, behavior: ipcidr, interval: 86400 }
+
+proxy-providers:
+  sub:
+    type: http
+    url: "pass your link here"
+    path: ./proxy_providers/sub.yml
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      timeout: 5000
+      lazy: true
+      expected-status: 204
+
+
+proxy-groups:
+
+  - name: QUIC
+    type: select
+    icon: https://github.com/zxc-rv/assets/raw/main/group-icons/quic.png
+    proxies: [PASS, REJECT]
+
+  - name: BLOCKED ADS
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/AdBlack.png
+    proxies: [PASS, REJECT]
+    
+  - name: BLOCKED SERVICES
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Reject.png
+    include-all: true
+    proxies: [PASS, DIRECT]
+
+  - name: CDN
+    type: select
+    icon: https://www.svgrepo.com/show/396567/globe-with-meridians.svg
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: DISCORD
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Discord.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: YOUTUBE
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/YouTube.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: MOZILLA
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Star.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: MICROSOFT
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: JETBRAINS
+    type: select
+    icon: https://github.com/cazmusw/MihomoInstallKenetic/blob/main/icons/jetbrains.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: INSTAGRAM
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Instagram.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: TWITCH
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitch.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: REDDIT
+    type: select
+    icon: https://www.redditstatic.com/shreddit/assets/favicon/192x192.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: META
+    type: select
+    icon: https://github.com/zxc-rv/assets/raw/main/group-icons/meta.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: SPOTIFY
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Spotify.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: TELEGRAM
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Telegram.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: STEAM
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Steam.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: GOOGLE
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Google_Search.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: GITHUB
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/GitHub.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: AI
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bot.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: TWITTER
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Twitter.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: TIKTOK
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/TikTok.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: MINECRAFT
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Microsoft.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: DRIVER BOOSTER
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+  - name: RAZER
+    type: select
+    icon: https://cdn.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Game.png
+    include-all: true
+    proxies: [BLOCKED SERVICES, PASS]
+
+rule-providers:
+  category-ai@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/ai-domain.mrs }
+  discord@ipcidr: { <<: *ipcidr, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/discord-voice-ip-history.mrs }
+  google@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/google-domain.mrs }
+  github@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/github-domain.mrs }
+  meta@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/facebook-domain.mrs }
+  meta@ipcidr: { <<: *ipcidr, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/facebook-ipset.mrs }
+  reddit@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/reddit-domain.mrs }
+  spotify@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/spotify-domain.mrs }
+  steam@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/steam-domain.mrs }
+  telegram@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/telegram-domain.mrs }
+  telegram@ipcidr: { <<: *ipcidr, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/telegram-ipset.mrs }
+  twitch@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/twitch-domain.mrs }
+  twitter@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/twitter-domain.mrs }
+  youtube@domain: { <<: *domain, url: https://raw.githubusercontent.com/cazmusw/MihomoInstallKenetic/refs/heads/main/rulesets/youtube-domain.mrs }
+  adlist@domain: { <<: *domain, url: https://github.com/cazmusw/ad-filter/releases/latest/download/adlist.mrs }
+
+  #CDN & Cloud Providers
+  scaleway@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/scaleway@ipcidr.mrs }
+  vultr@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/vultr@ipcidr.mrs }
+  ovh@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/ovh@ipcidr.mrs }
+  oracle@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/oracle.mrs }
+  oracle@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/oracle@ipcidr.mrs }
+  cdn77@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/cdn77@ipcidr.mrs }
+  akamai@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/akamai.mrs }
+  akamai@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/akamai@ipcidr.mrs }
+  amazon@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/amazon.mrs }
+  amazon@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/amazon@ipcidr.mrs }
+  cloudflare@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cloudflare.mrs }
+  cloudflare@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/cloudflare@ipcidr.mrs }
+  digitalocean@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/digitalocean.mrs }
+  digitalocean@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/digitalocean@ipcidr.mrs }
+  gcore@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/gcore@ipcidr.mrs }
+  hetzner@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hetzner.mrs }
+  hetzner@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/hetzner@ipcidr.mrs }
+  fastly@domain: { <<: *domain, url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/fastly.mrs }
+  fastly@ipcidr: { <<: *ipcidr, url: https://github.com/zxc-rv/zkeenip-rulesets/releases/latest/download/fastly@ipcidr.mrs }
+  
+
+rules:
+
+  # START AD BLOCK
+  - RULE-SET,adlist@domain,BLOCKED ADS # Блокировка рекламы
+  # END AD BLOCK
+
+  # START QUIC
+  - AND,((DST-PORT,443),(NETWORK,UDP)),QUIC # QUIC-трафик
+  # END QUIC
+
+  # START DISCORD
+  - RULE-SET,discord@ipcidr,DISCORD,no-resolve # Дискорд айпи
+  - AND,((DOMAIN-KEYWORD,discord),(NOT,((DOMAIN-SUFFIX,ru)))),DISCORD # Дискорд домены
+  # END DISCORD
+
+  # START YOUTUBE
+  - RULE-SET,youtube@domain,YOUTUBE # Ютуб домены
+  # END YOUTUBE
+
+  # START TWITCH
+  - OR,((DOMAIN-SUFFIX,gql.twitch.tv),(DOMAIN-SUFFIX,usher.ttvnw.net)),TWITCH #Домены твича для 4к качества
+  # END TWITCH
+
+  # START AI
+  - RULE-SET,category-ai@domain,AI # Искусственный интеллект домены
+  # END AI
+
+  # START STEAM
+  - RULE-SET,steam@domain,STEAM # Стим домены
+  # END STEAM
+
+  # START SPOTIFY
+  - RULE-SET,spotify@domain,SPOTIFY # Спотифай домены
+  # END SPOTIFY
+
+  # START REDDIT
+  - RULE-SET,reddit@domain,REDDIT # Реддит домены
+  # END REDDIT
+
+  # START TWITTER
+  - RULE-SET,twitter@domain,TWITTER # Твиттер домены
+  # END TWITTER
+
+  # START META
+  - RULE-SET,meta@domain,META # Мета домены (Facebook, WhatSap и т.д.)
+  - RULE-SET,meta@ipcidr,META,no-resolve # Мета айпи (Facebook, WhatSap и т.д.)
+  # END META
+
+  # START TELEGRAM
+  - RULE-SET,telegram@domain,TELEGRAM # Телеграм домены
+  - RULE-SET,telegram@ipcidr,TELEGRAM,no-resolve # Телеграм айпи
+  # END TELEGRAM
+
+  # START GOOGLE
+  - RULE-SET,google@domain,GOOGLE # Гугл домены
+  # END GOOGLE
+
+  # START GITHUB
+  - RULE-SET,github@domain,GITHUB # Гитхаб домены
+  # END GITHUB
+
+  # START JETBRAINS
+  - GEOSITE,jetbrains,JETBRAINS # Джетбрейнс домены
+  # END JETBRAINS
+  
+  # START TIKTOK
+  - GEOSITE,tiktok,TIKTOK # Тикток домены
+  # END TIKTOK
+
+  # START MOZILLA
+  - GEOSITE,mozilla,Mozilla # Мозилла домены
+  # END MOZILLA
+
+  # START MICROSOFT
+  - GEOSITE,microsoft,MICROSOFT # Майкрософт домены
+  # END MICROSOFT
+
+  # START INSTAGRAM
+  - GEOSITE,instagram,INSTAGRAM # Инстаграм домены
+  # END INSTAGRAM
+
+  # START RAZER
+  - GEOSITE,razer,RAZER # Рейзер домены
+  # END RAZER
+
+  # START DRIVER BOOSTER
+  - DOMAIN-SUFFIX,cd4o.com,DRIVER BOOSTER # Драйвер бустер домены
+  # END DRIVER BOOSTER
+
+  # START MINERAFT
+  - DOMAIN-SUFFIX,forgecdn.net,MINECRAFT # Майнкрафт домены
+  - DOMAIN-SUFFIX,cloudfront.net,MINECRAFT # Майнкрафт домены
+  - DOMAIN-SUFFIX,neoforged.net,MINECRAFT # Майнкрафт домены
+  - DOMAIN-SUFFIX,curseforge.com,MINECRAFT # Майнкрафт домены
+  - DOMAIN-SUFFIX,minecraftforge.net,MINECRAFT # Майнкрафт домены
+  # END MINERAFT
+
+  # START CDN 
+  - OR,((RULE-SET,amazon@domain),(RULE-SET,amazon@ipcidr)),CDN # Амазон
+  - OR,((RULE-SET,akamai@domain),(RULE-SET,akamai@ipcidr)),CDN # Акай
+  - OR,((RULE-SET,cloudflare@domain),(RULE-SET,cloudflare@ipcidr)),CDN # Клаудфлер
+  - OR,((RULE-SET,digitalocean@domain),(RULE-SET,digitalocean@ipcidr)),CDN # Диджиталоушен
+  - OR,((RULE-SET,fastly@domain),(RULE-SET,fastly@ipcidr)),CDN # Фастли
+  - OR,((RULE-SET,oracle@domain),(RULE-SET,oracle@ipcidr)),CDN # Оракл
+  - OR,((RULE-SET,hetzner@domain),(RULE-SET,hetzner@ipcidr)),CDN # Хетцнер
+  - RULE-SET,scaleway@ipcidr,CDN # Скалвей
+  - RULE-SET,ovh@ipcidr,CDN # Овх
+  - RULE-SET,vultr@ipcidr,CDN # Вултр
+  - RULE-SET,gcore@ipcidr,CDN # Гкор
+  - RULE-SET,cdn77@ipcidr,CDN # Цдн77
+  # END CDN
+
+  - MATCH,DIRECT

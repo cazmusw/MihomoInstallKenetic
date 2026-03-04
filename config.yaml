@@ -284,6 +284,7 @@ rules:
 
   # START JETBRAINS
   - GEOSITE,jetbrains,JETBRAINS # Джетбрейнс домены
+  - DOMAIN-SUFFIX,ckey.run,JETBRAINS #Активатор
   # END JETBRAINS
   
   # START TIKTOK
